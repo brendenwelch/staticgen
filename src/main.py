@@ -1,10 +1,10 @@
 import textnode
+import htmlnode
 
 
 def main():
-    print("hello world")
-    node = textnode.TextNode("idk man, some text", textnode.TextType.NORMAL, "httpxd")
-    print(node)
+    html = htmlnode.LeafNode("a", "linktext", {"href": "https://link.com"})
+    print(html.to_html())
 
 
 if __name__ == "__main__":
