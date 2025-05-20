@@ -1,5 +1,4 @@
-import sys
-import unittest
+import sys, unittest
 from textnode import TextNode, TextType
 
 

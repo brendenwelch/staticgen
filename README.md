@@ -1,2 +1,1 @@
-# staticgen
-Static Site Generator
+# Static Site Generator
