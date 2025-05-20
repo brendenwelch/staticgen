@@ -54,9 +54,9 @@ def split_nodes_delimiter(old_nodes, delimiter, text_type):
     if len(old_nodes) == 0:
         return new_nodes
     for node in old_nodes:
-        if len(node) == 0:
+        if node.text_type != TextType.TEXT or len(node.text) == 0:
             continue
-        splits = node.split(delimiter)
+        splits = node.text.split(delimiter)
         if len(splits)%2 == 0:
             raise Exception("No closing delimiter found")
         for i, split in enumerate(splits):

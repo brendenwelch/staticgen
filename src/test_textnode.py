@@ -22,7 +22,7 @@ class TestTextNode(unittest.TestCase):
         print("\n[TextNode] text_to_html: success", end="")
 
     def test_split_nodes_delimiter(self):
-        nodes = split_nodes_delimiter(["'wow', this is 'pretty' cool"], "'", TextType.ITALIC)
+        nodes = split_nodes_delimiter([TextNode("'wow', this is 'pretty' cool", TextType.TEXT)], "'", TextType.ITALIC)
         self.assertEqual(nodes, [TextNode("wow", TextType.ITALIC), TextNode(", this is ", TextType.TEXT), TextNode("pretty", TextType.ITALIC), TextNode(" cool", TextType.TEXT)])
         print("\n[TextNode] split_nodes_delimiter: success", end="")
 
