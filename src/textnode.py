@@ -78,8 +78,7 @@ def split_nodes_image(old_nodes):
         if node.text_type != TextType.TEXT or len(node.text) == 0:
             new_nodes.append(node)
         else:
-            #TODO:regex is missing text after images, if no image later
-            texts = re.findall(r"(.*?)!\[.*?\]\(.*?\)", node.text)
+            texts = re.split(r"!\[.*?\]\(.*?\)", node.text)
             texts.append(node.text.split(")")[-1])
             print("\n\n", texts, "\n")
             images = extract_markdown_images(node.text)
@@ -102,8 +101,7 @@ def split_nodes_link(old_nodes):
         if node.text_type != TextType.TEXT or len(node.text) == 0:
             new_nodes.append(node)
         else:
-            texts = re.findall(r"(.*?)\[.*?\]\(.*?\)", node.text)
-            texts.append(node.text.split(")")[-1])
+            texts = re.split(r"\[.*?\]\(.*?\)", node.text)
             links = extract_markdown_links(node.text)
             if len(links) == 0:
                 new_nodes.append(node)
