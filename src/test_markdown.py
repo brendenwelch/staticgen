@@ -1,5 +1,5 @@
 import sys, unittest
-from markdown import extract_markdown_images, extract_markdown_links, text_to_textnodes
+from markdown import extract_markdown_images, extract_markdown_links, text_to_textnodes, markdown_to_blocks
 from textnode import TextNode, TextType
 
 
@@ -38,6 +38,27 @@ class TestMarkdown(unittest.TestCase):
         print("\n[Markdown] text_to_textnodes: success", end="")
         sys.stdout.flush()
 
+    def test_markdown_to_blocks(self):
+        md = """
+This is **bolded** paragraph
+
+This is another paragraph with _italic_ text and `code` here
+This is the same paragraph on a new line
+
+- This is a list
+- with items
+"""
+        blocks = markdown_to_blocks(md)
+        self.assertEqual(
+            blocks,
+            [
+                "This is **bolded** paragraph",
+                "This is another paragraph with _italic_ text and `code` here\nThis is the same paragraph on a new line",
+                "- This is a list\n- with items",
+            ],
+        )
+        print("\n[Markdown] markdown_to_blocks: success", end="")
+        sys.stdout.flush()
 
 if __name__ == "__main__":
     unittest.main()

@@ -4,6 +4,15 @@ from htmlnode import LeafNode
 from markdown import extract_markdown_images, extract_markdown_links
 
 
+class BlockType(Enum):
+    PARAGRAPH = "paragraph"
+    HEADING = "heading"
+    CODE = "code"
+    QUOTE = "quote"
+    UNORDERED_LIST = "unordered list"
+    ORDERED_LIST = "ordered list"
+
+
 class TextType(Enum):
     TEXT = "text"
     BOLD = "bold"
@@ -80,7 +89,6 @@ def split_nodes_image(old_nodes):
         else:
             texts = re.split(r"!\[.*?\]\(.*?\)", node.text)
             texts.append(node.text.split(")")[-1])
-            print("\n\n", texts, "\n")
             images = extract_markdown_images(node.text)
             if len(images) == 0:
                 new_nodes.append(node)
@@ -112,3 +120,9 @@ def split_nodes_link(old_nodes):
                 if i < len(links):
                     new_nodes.append(TextNode(links[i][0], TextType.LINK, links[i][1]))
     return new_nodes
+
+
+def block_to_block_type(block):
+    # this is rough
+    return block
+
