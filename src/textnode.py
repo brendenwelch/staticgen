@@ -123,6 +123,21 @@ def split_nodes_link(old_nodes):
 
 
 def block_to_block_type(block):
-    # this is rough
-    return block
+    if block.startswith("#"):
+        for i in range(1, 7):
+            if block[i] == " ":
+                return BlockType.HEADING
+            elif block[i] != "#":
+                break
+        return BlockType.PARAGRAPH
+    if block.startswith("```") and block.endswith("```"):
+        return BlockType.CODE
+    splits = block.split("\n")
+    if all(map(lambda b: b.startswith(">"), splits)):
+        return BlockType.QUOTE
+    if all(map(lambda b: b.startswith("- "), splits)):
+        return BlockType.UNORDERED_LIST
+    if all(map(lambda b: b[0].isnumeric() and b[1:3] == ". ", splits)):
+        return BlockType.ORDERED_LIST
+    return BlockType.PARAGRAPH
 

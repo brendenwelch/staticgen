@@ -1,5 +1,5 @@
 import sys, unittest
-from textnode import TextNode, TextType, text_node_to_html_node, split_nodes_delimiter, split_nodes_image, split_nodes_link
+from textnode import BlockType, TextNode, TextType, text_node_to_html_node, split_nodes_delimiter, split_nodes_image, split_nodes_link, block_to_block_type
 
 
 class TestTextNode(unittest.TestCase):
@@ -49,6 +49,13 @@ class TestTextNode(unittest.TestCase):
         ])
         print("\n[TextNode] split_nodes_link: success", end="")
         sys.stdout.flush()
+
+    def test_block_to_block_type(self):
+        block = "###### fdsje"
+        self.assertEqual(block_to_block_type(block), BlockType.HEADING)
+        print("\n[TextNode] block_to_block_type: success", end="")
+        sys.stdout.flush()
+
 
 if __name__ == "__main__":
     unittest.main()
