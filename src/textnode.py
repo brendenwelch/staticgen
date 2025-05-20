@@ -46,12 +46,16 @@ def text_node_to_html_node(text_node):
         case TextType.IMAGE:
             return LeafNode("img", "", {"src":text_node.url, "alt":text_node.text})
         case _:
-            raise ValueError
+            raise ValueError("invalied TextType")
 
 
 def split_nodes_delimiter(old_nodes, delimiter, text_type):
     new_nodes = []
+    if len(old_nodes) == 0:
+        return new_nodes
     for node in old_nodes:
+        if len(node) == 0:
+            continue
         splits = node.split(delimiter)
         if len(splits)%2 == 0:
             raise Exception("No closing delimiter found")
