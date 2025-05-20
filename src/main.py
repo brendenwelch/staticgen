@@ -3,9 +3,10 @@ import htmlnode
 
 
 def main():
-    html = htmlnode.LeafNode("a", "linktext", {"href": "https://link.com"})
-    print(html.to_html())
-
+    sentence = ",aaaaaa ,bbbbbb,c"
+    word, rest = sentence.split(",", maxsplit=1)
+    print(word)
+    print(rest)
 
 if __name__ == "__main__":
     main()

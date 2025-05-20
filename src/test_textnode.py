@@ -25,7 +25,6 @@ class TestTextNode(unittest.TestCase):
         nodes = split_nodes_delimiter(["'wow', this is 'pretty' cool"], "'", TextType.ITALIC)
         self.assertEqual(nodes, [TextNode("wow", TextType.ITALIC), TextNode(", this is ", TextType.TEXT), TextNode("pretty", TextType.ITALIC), TextNode(" cool", TextType.TEXT)])
         print("\n[TextNode] split_nodes_delimiter: success", end="")
-        print(nodes)
 
 if __name__ == "__main__":
     unittest.main()
