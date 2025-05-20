@@ -49,29 +49,22 @@ def text_node_to_html_node(text_node):
             raise ValueError
 
 
-#TODO: check for matching delimiter
 def split_nodes_delimiter(old_nodes, delimiter, text_type):
-    if len(old_nodes) == 0:
-        return []
-
     new_nodes = []
     for node in old_nodes:
-        if delimiter not in node:
-            new_nodes.append(TextNode(node, TextType.TEXT))
-            continue
-
-        if delimiter == node[0]:
-            node_type = text_type
-        else:
-            node_type = TextType.TEXT
-
-        splits = node.split(delimiter)
-        for split in splits:
-            new_nodes.append(TextNode(split, node_type))
-            if node_type == text_type:
-                node_type = TextType.TEXT
+        node_type = TextType.TEXT
+        node_text = ""
+        for char in node:
+            if char != delimiter:
+                node_text += char
             else:
-                node_type = text_type
-
+                if len(node_text) > 0:
+                    new_nodes.append(TextNode(node_text, node_type))
+                if node_type == text_type:
+                    node_type = TextType.TEXT
+                else:
+                    node_type = text_type
+                node_text = ""
+        if len(node_text) > 0:
+            new_nodes.append(TextNode(node_text, node_type))
     return new_nodes
-
