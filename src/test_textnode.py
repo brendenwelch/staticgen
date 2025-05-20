@@ -1,5 +1,5 @@
 import sys, unittest
-from textnode import TextNode, TextType
+from textnode import TextNode, TextType, text_node_to_html_node
 
 
 class TestTextNode(unittest.TestCase):
@@ -13,6 +13,13 @@ class TestTextNode(unittest.TestCase):
         self.assertNotEqual(node3, node4)
         print("\n[TextNode] operator (==) overload tests: success", end="")
         sys.stdout.flush()
+
+    def test_text_to_html(self):
+        node = TextNode("This is a text node", TextType.TEXT)
+        html_node = text_node_to_html_node(node)
+        self.assertEqual(html_node.tag, None)
+        self.assertEqual(html_node.value, "This is a text node")
+        print("\n[TextNode] text_to_html: success", end="")
 
 
 if __name__ == "__main__":
