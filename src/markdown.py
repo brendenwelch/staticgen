@@ -1,6 +1,6 @@
 import re
-from textnode import TextNode, BlockType, block_to_block_type, text_node_to_html_node
-from htmlnode import HTMLNode
+from textnode import BlockType, block_to_block_type, text_node_to_html_node
+from htmlnode import HTMLNode, ParentNode, LeafNode
 
 
 def extract_markdown_images(text):
@@ -48,13 +48,13 @@ def markdown_to_html_node(markdown):
         block_type = block_to_block_type(block)
         block_node = block_to_nodes(block, block_type)
         children.append(block_node)
-    return HTMLNode("div", None, children, None)
+    return ParentNode("div", children)
 
 
 def block_to_nodes(block, block_type):
     match block_type:
         case BlockType.CODE:
-            return HTMLNode("code", block[3:-3], None, None)
+            return ParentNode("code", [LeafNode(None, block[3:-3])])
         case BlockType.HEADING:
             level = 6
             for char in block[1:6]:
@@ -62,7 +62,7 @@ def block_to_nodes(block, block_type):
                     level -= 1
                 else:
                     break
-            return HTMLNode(f"h{level}", block[8-level:], None, None)
+            return LeafNode(f"h{level}", block[8-level:])
         case BlockType.QUOTE:
             dirty = block.split()
             clean = []
@@ -73,7 +73,7 @@ def block_to_nodes(block, block_type):
             children = []
             for node in text_nodes:
                 children.append(text_node_to_html_node(node))
-            return HTMLNode("q", None, children, None)
+            return ParentNode("blockquote", children)
         case BlockType.UNORDERED_LIST:
             lines = block.split()
             children = []
@@ -82,8 +82,8 @@ def block_to_nodes(block, block_type):
                 html_nodes = []
                 for node in text_nodes:
                     html_nodes.append(text_node_to_html_node(node))
-                children.append(HTMLNode("li", None, html_nodes, None))
-            return HTMLNode("ul", None, children, None)
+                children.append(ParentNode("li", html_nodes))
+            return ParentNode("ul", children)
         case BlockType.ORDERED_LIST:
             lines = block.split()
             children = []
@@ -92,11 +92,13 @@ def block_to_nodes(block, block_type):
                 html_nodes = []
                 for node in text_nodes:
                     html_nodes.append(text_node_to_html_node(node))
-                children.append(HTMLNode("li", None, html_nodes, None))
-            return HTMLNode("ol", None, children, None)
+                children.append(ParentNode("li", html_nodes))
+            return ParentNode("ol", children)
         case _:
             text_nodes = text_to_textnodes(block)
+            for node in text_nodes:
+                node.text = node.text.replace("\n", " ")
             children = []
             for node in text_nodes:
                 children.append(text_node_to_html_node(node))
-            return HTMLNode("p", None, children, None)
+            return ParentNode("p", children)

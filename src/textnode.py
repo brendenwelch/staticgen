@@ -1,7 +1,6 @@
 import re
 from enum import Enum
 from htmlnode import LeafNode
-from markdown import extract_markdown_images, extract_markdown_links
 
 
 class BlockType(Enum):
@@ -80,6 +79,7 @@ def split_nodes_delimiter(old_nodes, delimiter, text_type):
 
 
 def split_nodes_image(old_nodes):
+    from markdown import extract_markdown_images
     new_nodes = []
     if len(old_nodes) == 0:
         return new_nodes
@@ -102,6 +102,7 @@ def split_nodes_image(old_nodes):
 
 
 def split_nodes_link(old_nodes):
+    from markdown import extract_markdown_links
     new_nodes = []
     if len(old_nodes) == 0:
         return new_nodes
