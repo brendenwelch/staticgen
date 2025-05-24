@@ -56,15 +56,15 @@ def block_to_nodes(block, block_type):
         case BlockType.CODE:
             return ParentNode("code", [LeafNode(None, block[3:-3])])
         case BlockType.HEADING:
-            level = 6
+            level = 1
             for char in block[1:6]:
                 if char == "#":
-                    level -= 1
+                    level += 1
                 else:
                     break
-            return LeafNode(f"h{level}", block[8-level:])
+            return LeafNode(f"h{level}", block[level+1:])
         case BlockType.QUOTE:
-            dirty = block.split()
+            dirty = block.split("\n")
             clean = []
             for line in dirty:
                 clean.append(line[2:])
@@ -75,7 +75,7 @@ def block_to_nodes(block, block_type):
                 children.append(text_node_to_html_node(node))
             return ParentNode("blockquote", children)
         case BlockType.UNORDERED_LIST:
-            lines = block.split()
+            lines = block.split("\n")
             children = []
             for line in lines:
                 text_nodes = text_to_textnodes(line[2:])
@@ -85,7 +85,7 @@ def block_to_nodes(block, block_type):
                 children.append(ParentNode("li", html_nodes))
             return ParentNode("ul", children)
         case BlockType.ORDERED_LIST:
-            lines = block.split()
+            lines = block.split("\n")
             children = []
             for line in lines:
                 text_nodes = text_to_textnodes(line[3:])
@@ -102,3 +102,12 @@ def block_to_nodes(block, block_type):
             for node in text_nodes:
                 children.append(text_node_to_html_node(node))
             return ParentNode("p", children)
+
+
+def extract_title(markdown):
+    for line in markdown.split("\n"):
+        if line[:2] == "# ":
+            return line[2:].strip()
+    raise Exception("no title found")
+
+

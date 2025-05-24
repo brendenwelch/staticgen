@@ -104,5 +104,15 @@ the **same** even with inline stuff
         sys.stdout.flush()
 
 
+    def test_extract_title(self):
+        from markdown import extract_title
+
+        md = "# some title"
+        title = extract_title(md)
+        self.assertEqual(title, "some title")
+        print("\n[Markdown] extract_title: success", end="")
+        sys.stdout.flush()
+
+
 if __name__ == "__main__":
     unittest.main()
