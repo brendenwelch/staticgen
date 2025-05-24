@@ -4,7 +4,7 @@ from markdown import extract_title
 
 def main():
     create_from_static("static/", "public/")
-    generate_page("content/index.md", "template.html", "public/index.html")
+    generate_pages_recursive("content", "template.html", "public")
 
 
 def create_from_static(src, dest):
@@ -38,10 +38,21 @@ def generate_page(from_path, template_path, dest_path):
         template = file.read()
     out = template.replace("{{ Title }}", title).replace("{{ Content }}", html)
 
-    #TODO:create missing directories if not present
     with open(dest_path, "w") as file:
         file.write(out)
 
+
+def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
+    for item in os.listdir(dir_path_content):
+        src = os.path.join(dir_path_content, item)
+        dest = os.path.join(dest_dir_path, item.replace(".md", ".html"))
+        if os.path.isfile(src) and src[-2:] == "md":
+            generate_page(src, template_path, dest)
+        elif not os.path.isfile(src):
+            os.mkdir(dest)
+            generate_pages_recursive(src, template_path, dest)
+        else:
+            raise Exception("invalid file in content")
 
 
 if __name__ == "__main__":
