@@ -1,10 +1,15 @@
-import os, shutil
+import os, sys, shutil
 
 from markdown import extract_title
 
 def main():
-    create_from_static("static/", "public/")
-    generate_pages_recursive("content", "template.html", "public")
+    basepath = "/"
+    if len(sys.argv) > 1:
+        basepath = sys.argv[1]
+
+
+    create_from_static("static/", "docs/")
+    generate_pages_recursive(basepath, "content", "template.html", "docs")
 
 
 def create_from_static(src, dest):
@@ -25,7 +30,7 @@ def create_from_static(src, dest):
             create_from_static(src_path, dest_path)
 
 
-def generate_page(from_path, template_path, dest_path):
+def generate_page(basepath, from_path, template_path, dest_path):
     from markdown import markdown_to_html_node
     print(f"Generating page from {from_path} to {dest_path} using {template_path}")
 
@@ -37,20 +42,21 @@ def generate_page(from_path, template_path, dest_path):
     with open(template_path, "r") as file:
         template = file.read()
     out = template.replace("{{ Title }}", title).replace("{{ Content }}", html)
+    out = out.replace('href="/', f'href="{basepath}').replace('src="/', f'src="{basepath}')
 
     with open(dest_path, "w") as file:
         file.write(out)
 
 
-def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
+def generate_pages_recursive(basepath, dir_path_content, template_path, dest_dir_path):
     for item in os.listdir(dir_path_content):
         src = os.path.join(dir_path_content, item)
         dest = os.path.join(dest_dir_path, item.replace(".md", ".html"))
         if os.path.isfile(src) and src[-2:] == "md":
-            generate_page(src, template_path, dest)
+            generate_page(basepath, src, template_path, dest)
         elif not os.path.isfile(src):
             os.mkdir(dest)
-            generate_pages_recursive(src, template_path, dest)
+            generate_pages_recursive(basepath, src, template_path, dest)
         else:
             raise Exception("invalid file in content")
 
